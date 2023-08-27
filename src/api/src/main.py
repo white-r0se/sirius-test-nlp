@@ -20,6 +20,7 @@ def read_root():
 
 @app.post("/predict", response_model=TextOutput)
 def predict(input: TextInput):
+    print("predict called")
     reply, history = interface.predict(input.text)
     return {"reply": reply, "history": history}
 

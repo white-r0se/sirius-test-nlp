@@ -5,24 +5,27 @@ import requests
 # BOT_TOKEN = os.environ.get('BOT_TOKEN')
 bot = telebot.TeleBot("6421026571:AAGPlGWr-FeHr6xRCllrrWfs6t-_DYMCWLM")
 
-def send_post_predict(text):
-    # send post request to api, i have no idea how to do it
-    # but I have network "mynet" between my docker containers
-    # so I can send request to api container
-    url = "http://sirius-test-nlp-app-1:8080/predict"
+def send_post(text):
+    url = "http://sirius-test-nlp-app-1/predict"
     payload = {"text": text}
     headers = {"Content-Type": "application/json"}
-    response = requests.post(url, json=payload, headers=headers)
-    return response.json()
+    response = requests.post(url, json=payload, headers=headers, timeout=1000)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {"reply": "Произошла ошибка при обращении к боту"}
 
-def send_get_clear_history():
-    url = "http://sirius-test-nlp-app-1:8080/clear_history"
+def send_get():
+    url = "http://sirius-test-nlp-app-1/clear_history"
     response = requests.get(url)
-    return response.json()
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return {"status": "Произошла ошибка при обращении к боту"}
 
 @bot.message_handler(commands=['help'])
 def send_help(message):
-    bot.reply_to(message, "Для очистки истории чата нажмите /clear_history")
+    bot.reply_to(message, "Запуск бота: /start\Очистка чата: /clear_history")
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
@@ -35,14 +38,13 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['clear_history'])
 def clear_history(message):
-    send_get_clear_history()
+    send_get()    
     bot.reply_to(message, "История чата очищена")
 
 @bot.message_handler(func=lambda m: True)
 def reply(message):
     bot.send_chat_action(message.chat.id, 'typing')
-    reply = send_post_predict(message.text)["reply"]
-    print(history)
+    reply = send_post(message.text)["reply"]
     bot.reply_to(message, reply)
 
 def main():
