@@ -6,3 +6,7 @@ run:
 
 stop:
 	docker-compose down
+
+tests:
+	python3 src/tests/bot_test.py
+	python3 src/tests/interface_test.py
