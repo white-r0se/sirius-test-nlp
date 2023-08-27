@@ -1,0 +1,24 @@
+version: '3'
+services:
+  app:
+    build:
+      context: ./src/api
+      dockerfile: Dockerfile
+    volumes:
+      - ./models:/app/models
+    platform: linux/arm64
+    ports:
+      - "80:80"
+    networks:
+      - mynet
+  bot:
+    build:
+      context: ./src/bot
+      dockerfile: Dockerfile
+    depends_on:
+      - app
+    networks:
+      - mynet
+networks:
+  mynet:
+    external: true
