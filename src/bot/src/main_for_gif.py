@@ -51,10 +51,12 @@ def clear_history(message):
 def reply(message):
     bot.send_chat_action(message.chat.id, 'typing')
     # reply = send_post(message.text)["reply"]
+    reply = None
     reply, history = model.predict(message.text)
-    print(reply)
-    print(history)
-    bot.reply_to(message, reply)
+    if reply is not None and reply != "":
+        bot.reply_to(message, reply)
+    else:
+        bot.reply_to(message, "Произошла ошибка при обращении к боту")
 
 def main():
     bot.polling()

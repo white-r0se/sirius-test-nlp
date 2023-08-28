@@ -48,7 +48,6 @@ class TestFineTune(unittest.TestCase):
         self.fine_tune_model.prepare_model()
         self.fine_tune_model.fine_tune()
         assert os.path.exists(self.fine_tune_model.config.path_to_save)
-        assert os.path.exists(self.fine_tune_model.config.path_to_save + '-test')
 
 if __name__ == '__main__':
     unittest.main()

@@ -2,7 +2,7 @@
   "auto_mapping": null,
   "base_model_name_or_path": "tinkoff-ai/ruDialoGPT-medium",
   "bias": "none",
-  "fan_in_fan_out": false,
+  "fan_in_fan_out": true,
   "inference_mode": true,
   "init_lora_weights": true,
   "layers_pattern": null,
@@ -14,8 +14,8 @@
   "r": 32,
   "revision": null,
   "target_modules": [
-    "wte",
-    "lm_head"
+    "c_attn",
+    "c_proj"
   ],
   "task_type": "CAUSAL_LM"
 }

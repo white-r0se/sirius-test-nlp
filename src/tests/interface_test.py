@@ -38,6 +38,11 @@ class TestInterfaceModel(unittest.TestCase):
         self.assertEqual(reply, "Sample reply")
         self.assertEqual(history, "Sample history")
 
+    def test_predict_with_too_long_history(self):
+        self.interface_model.chat_history = " ".join(["Sample history"] * 1024)
+        reply, history = self.interface_model.predict("Sample text")
+        self.assertTrue(len(history.split()) < 2048)
+
     def test_history_saves(self):
         self.interface_model.predict("Sample text")
 

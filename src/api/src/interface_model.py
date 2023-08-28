@@ -4,8 +4,8 @@ import os
 import sys
 
 cur_path = os.path.dirname(os.path.abspath(__file__))
-# parent_path = os.path.dirname(cur_path)
-# sys.path.append(parent_path)
+parent_path = os.path.dirname(cur_path)
+sys.path.append(parent_path)
 
 __version__ = "0.0.1"
 
@@ -13,8 +13,8 @@ class InterfaceModel:
     """Interface model for the chatbot"""
 
     def __init__(self):
-        # self.model_path = "models/rudialogpt-medium-lora-5ep"
-        self.model_path = "../../../models/rudialogpt-medium-lora-5ep"
+        self.model_path = "models/rudialogpt-medium-lora-5ep"
+        # self.model_path = "../../../models/rudialogpt-medium-lora-5ep"
         self.model = None
         self.tokenizer = None
         self.config = None
@@ -28,7 +28,6 @@ class InterfaceModel:
         model = AutoModelForCausalLM.from_pretrained(self.config.base_model_name_or_path)
         self.model = PeftModel.from_pretrained(model, self.model_path)
         self.chat_history = "@@ПЕРВЫЙ@@ "
-        print("Model is set up")
 
     def predict(self, input_str: str) -> tuple[str]:
         """
@@ -43,7 +42,7 @@ class InterfaceModel:
         if self.model is None:
             self.setup_model()
         self.chat_history = self.chat_history + input_str + " @@ВТОРОЙ@@ "
-        # check max len seq
+        # check too long history
         if len(self.chat_history.split()) > 1000:
             self.chat_history = self.chat_history.split()[-1000:]
             self.chat_history = " ".join(self.chat_history)
