@@ -4,6 +4,7 @@ import requests
 import sys
 sys.path.append("../../api/src/")
 from interface_model import InterfaceModel
+
 model = InterfaceModel()
 
 # BOT_TOKEN = os.environ.get('BOT_TOKEN')
@@ -51,9 +52,9 @@ def reply(message):
     bot.send_chat_action(message.chat.id, 'typing')
     # reply = send_post(message.text)["reply"]
     reply, history = model.predict(message.text)
+    print(reply)
     print(history)
-    if reply == "":
-        bot.reply_to(message, reply)
+    bot.reply_to(message, reply)
 
 def main():
     bot.polling()
