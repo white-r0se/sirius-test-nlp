@@ -29,4 +29,4 @@ networks:
 
 secrets:
   token:
-    environment: BOT_TOKEN
+    environment: BOT_TOKENили

@@ -3,14 +3,22 @@ import os
 import torch
 import numpy as np
 import pandas as pd
-from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments, DataCollatorForLanguageModeling
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    Trainer,
+    TrainingArguments,
+    DataCollatorForLanguageModeling,
+)
 from peft import LoraConfig, get_peft_model, TaskType
 import sys
 import os
+
 cur_path = os.path.dirname(os.path.abspath(__file__))
 parent_path = os.path.dirname(cur_path)
 sys.path.append(os.path.join(parent_path, "data"))
 from dataset import ApplyWordDropout, ConversationDataset, ConversationDataModule
+
 
 class Config:
     def __init__(self):
@@ -35,8 +43,18 @@ class Config:
         self.warmup_ratio = 0.1
         self.learning_rate = 1e-4
         self.prediction_loss_only = True
-        self.path_to_data = str(os.path.join(os.path.dirname(parent_path), "data/processed/data_processed.csv"))
-        self.path_to_save = str(os.path.join(os.path.dirname(parent_path), f"models/rudialogpt-medium-lora-{self.num_train_epochs}ep"))
+        self.path_to_data = str(
+            os.path.join(
+                os.path.dirname(parent_path), "data/processed/data_processed.csv"
+            )
+        )
+        self.path_to_save = str(
+            os.path.join(
+                os.path.dirname(parent_path),
+                f"models/rudialogpt-medium-lora-{self.num_train_epochs}ep",
+            )
+        )
+
 
 class FineTune:
     def __init__(self, config, tokenizer_name, model_name):
@@ -62,22 +80,21 @@ class FineTune:
     def prepare_model(self):
         self.set_seed()
         self.tokenizer = AutoTokenizer.from_pretrained(
-            self.tokenizer_name, padding_side='left'
+            self.tokenizer_name, padding_side="left"
         )
-        self.model = AutoModelForCausalLM.from_pretrained(
-            self.model_name
-        ).to(self.config.device)
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_name).to(
+            self.config.device
+        )
         self.lora_config = LoraConfig(
             r=32,
             lora_alpha=32,
             target_modules=["wte", "lm_head"],
             lora_dropout=0.05,
             bias="none",
-            task_type=TaskType.CAUSAL_LM
+            task_type=TaskType.CAUSAL_LM,
         )
         self.data_collator = DataCollatorForLanguageModeling(
-            tokenizer=self.tokenizer,
-            mlm=False
+            tokenizer=self.tokenizer, mlm=False
         )
         self.training_args = TrainingArguments(
             optim=self.config.optim,
@@ -98,8 +115,7 @@ class FineTune:
             prediction_loss_only=self.config.prediction_loss_only,
         )
         self.data_module = ConversationDataModule(
-            pd.read_csv(self.config.path_to_data).fillna(""),
-            self.config
+            pd.read_csv(self.config.path_to_data).fillna(""), self.config
         )
         self.data_module.setup()
         self.trainer = Trainer(
@@ -116,6 +132,7 @@ class FineTune:
         self.trainer.train()
         self.trainer.save_model(self.config.path_to_save)
 
+
 def main():
     wandb.init(project="sirius-nlp-chatbot")
     config = Config()
@@ -126,5 +143,6 @@ def main():
     fine_tune.fine_tune()
     wandb.finish()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
