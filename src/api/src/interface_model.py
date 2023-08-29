@@ -1,11 +1,11 @@
 from peft import PeftModel, PeftConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer
-import os
-import sys
+# import os
+# import sys
 
-cur_path = os.path.dirname(os.path.abspath(__file__))
-parent_path = os.path.dirname(cur_path)
-sys.path.append(parent_path)
+# cur_path = os.path.dirname(os.path.abspath(__file__))
+# parent_path = os.path.dirname(cur_path)
+# sys.path.append(parent_path)
 
 __version__ = "0.0.1"
 
@@ -13,7 +13,7 @@ class InterfaceModel:
     """Interface model for the chatbot"""
 
     def __init__(self):
-        self.model_path = "models/rudialogpt-medium-lora-5ep"
+        self.model_path = "../models/rudialogpt-medium-lora-5ep"
         # self.model_path = "../../../models/rudialogpt-medium-lora-5ep"
         self.model = None
         self.tokenizer = None

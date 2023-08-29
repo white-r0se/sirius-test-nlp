@@ -6,11 +6,11 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./models:/app/models
-    platform: linux/arm64
     ports:
       - "80:80"
     networks:
       - mynet
+    cpus: 4
   bot:
     build:
       context: ./src/bot
@@ -19,6 +19,14 @@ services:
       - app
     networks:
       - mynet
+    secrets:
+      - token
+    cpus: 4
+
 networks:
   mynet:
     external: true
+
+secrets:
+  token:
+    environment: BOT_TOKEN

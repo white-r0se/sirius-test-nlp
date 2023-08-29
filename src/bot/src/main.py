@@ -8,12 +8,13 @@ class ChatBot:
 
     def check_connection(self):
         try:
-            response = requests.get(self.url)
-            if response.status_code != 200:
+            response = requests.get(self.url, timeout=10)
+            if response.status_code == 200:
+                return True
+            else:
                 return False
         except requests.exceptions.ConnectionError:
             return False
-        return True
 
     def send_post(self, text):
         url = self.url + "/predict"
@@ -29,7 +30,7 @@ class ChatBot:
         url = self.url + "/clear_history"
         response = requests.get(url)
         if response.status_code == 200:
-            return response.json()
+            return {"status": "OK"}
         else:
             return {"status": "Произошла ошибка при обращении к боту"}      
 
@@ -49,18 +50,18 @@ class ChatBot:
 
         @self.bot.message_handler(commands=['clear_history'])
         def clear_history(message):
-            if not self.check_connection():
+            if self.check_connection():
                 response = self.send_get()
-                if "status" in response:
+                if response["status"] == "OK":
                     self.bot.reply_to(message, "История чата очищена")
                 else:
                     self.bot.reply_to(message, "Произошла ошибка при обращении к боту")
             else:
-                self.bot.reply_to(message, "Произошла ошибка при обращении к боту")
+                self.bot.reply_to(message, "Произошла ошибка при обращении к боту (ошибка подключения)")
 
         @self.bot.message_handler(func=lambda m: True)
         def reply(message):
-            if not self.check_connection():
+            if self.check_connection():
                 self.bot.send_chat_action(message.chat.id, 'typing')
                 response = self.send_post(message.text)
                 if "reply" in response:
@@ -69,13 +70,14 @@ class ChatBot:
                 else:
                     self.bot.reply_to(message, "Произошла ошибка при обращении к боту")
             else:
-                self.bot.reply_to(message, "Произошла ошибка при обращении к боту")
+                self.bot.reply_to(message, "Произошла ошибка при обращении к боту (ошибка подключения)")
 
     def run(self):
         self.start()
         self.bot.polling()
 
 if __name__ == '__main__':
-    token = "6421026571:AAGPlGWr-FeHr6xRCllrrWfs6t-_DYMCWLM"
-    chat_bot = ChatBot(token)
+    with open('/run/secrets/token', 'r') as f:
+        BOT_TOKEN = f.read()
+    chat_bot = ChatBot(token=BOT_TOKEN)
     chat_bot.run()
