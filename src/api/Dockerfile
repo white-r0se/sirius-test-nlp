@@ -8,4 +8,4 @@ COPY ./src /app/src
 
 WORKDIR /app/src
 
-CMD ["uvicorn", "main:app", "--workers", "4", "--timeout-keep-alive", "100", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "main:app", "--workers", "4", "--timeout-keep-alive", "1000", "--host", "0.0.0.0", "--port", "80"]

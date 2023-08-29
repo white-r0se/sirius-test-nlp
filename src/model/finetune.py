@@ -13,7 +13,6 @@ from transformers import (
 from peft import LoraConfig, get_peft_model, TaskType
 import sys
 import os
-
 cur_path = os.path.dirname(os.path.abspath(__file__))
 parent_path = os.path.dirname(cur_path)
 sys.path.append(os.path.join(parent_path, "data"))
@@ -137,7 +136,7 @@ def main():
     wandb.init(project="sirius-nlp-chatbot")
     config = Config()
     fine_tune = FineTune(
-        config, "tinkoff-ai/ruDialoGPT-small", "tinkoff-ai/ruDialoGPT-medium"
+        config, "tinkoff-ai/ruDialoGPT-medium", "tinkoff-ai/ruDialoGPT-medium"
     )
     fine_tune.prepare_model()
     fine_tune.fine_tune()

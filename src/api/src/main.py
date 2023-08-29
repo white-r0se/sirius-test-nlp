@@ -5,6 +5,7 @@ from interface_model import __version__
 
 app = FastAPI()
 interface = InterfaceModel()
+print("Model is loaded")
 
 
 class TextInput(BaseModel):
@@ -26,6 +27,7 @@ def read_root():
 def predict(input: TextInput):
     """Predict endpoint"""
     reply, history = interface.predict(input.text)
+    # reply, history = "reply_text", "history_text"
     return {"reply": reply, "history": history}
 
 

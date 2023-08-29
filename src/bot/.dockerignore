@@ -1,5 +1,5 @@
 __pycache__
-*.рус
+*.pyc
 *.pyo
 *.pyd
 .Python
@@ -8,10 +8,10 @@ venv/
 pip-log.txt
 pip-delete-this-directory.txt
 .tox/
-.coverage 
+.coverage
 coverage.*
-•cache 
-nosetests.xml 
+.cache
+nosetests.xml
 coverage.xml
 *.cover
 *.log 

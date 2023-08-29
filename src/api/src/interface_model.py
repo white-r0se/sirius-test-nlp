@@ -14,6 +14,7 @@ class InterfaceModel:
         self.tokenizer = None
         self.config = None
         self.chat_history = None
+        self.setup_model()
 
     def setup_model(self):
         self.config = PeftConfig.from_pretrained(self.model_path)
