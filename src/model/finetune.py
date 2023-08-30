@@ -86,10 +86,10 @@ class FineTune:
         self.lora_config = LoraConfig(
             r=32,
             lora_alpha=32,
-            target_modules=["wte", "lm_head"],
+            target_modules=["c_attn", "c_proj"],
             lora_dropout=0.05,
             bias="none",
-            task_type=TaskType.CAUSAL_LM,
+            task_type=TaskType.CAUSAL_LM
         )
         self.data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokenizer, mlm=False
