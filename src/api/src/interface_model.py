@@ -8,13 +8,14 @@ __version__ = "0.0.1"
 class InterfaceModel:
     """Interface model for the chatbot"""
 
-    def __init__(self):
+    def __init__(self, setup_model: bool = True):
         self.model_path = "../models/rudialogpt-medium-lora-5ep"
         self.model = None
         self.tokenizer = None
         self.config = None
         self.chat_history = None
-        self.setup_model()
+        if setup_model:
+            self.setup_model()
 
     def setup_model(self):
         self.config = PeftConfig.from_pretrained(self.model_path)

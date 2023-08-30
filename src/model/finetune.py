@@ -11,12 +11,11 @@ from transformers import (
     DataCollatorForLanguageModeling,
 )
 from peft import LoraConfig, get_peft_model, TaskType
-import sys
+from data.dataset import ConversationDataModule
 import os
+
 cur_path = os.path.dirname(os.path.abspath(__file__))
 parent_path = os.path.dirname(cur_path)
-sys.path.append(os.path.join(parent_path, "data"))
-from dataset import ApplyWordDropout, ConversationDataset, ConversationDataModule
 
 
 class Config:
