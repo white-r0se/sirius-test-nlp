@@ -2,7 +2,8 @@ import os
 import pytest
 import re
 import transformers
-from model.finetune import (
+import peft
+from src.model.finetune import (
     Config,
     FineTune,
     ConversationDataModule,
@@ -32,7 +33,7 @@ def test_prepare_model(fine_tune_model):
     assert fine_tune_model.model is not None
     assert isinstance(
         fine_tune_model.model,
-        transformers.models.gpt2.modeling_gpt2.GPT2LMHeadModel,
+        peft.peft_model.PeftModelForCausalLM,
     )
     assert fine_tune_model.lora_config is not None
     assert isinstance(fine_tune_model.lora_config, LoraConfig)

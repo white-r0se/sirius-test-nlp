@@ -2,7 +2,7 @@ import os
 import pytest
 from unittest.mock import patch, MagicMock
 import requests
-from bot.src.main import ChatBot
+from src.bot.src.main import ChatBot
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 

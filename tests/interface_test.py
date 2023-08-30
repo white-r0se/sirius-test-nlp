@@ -1,6 +1,6 @@
 import pytest
 import transformers
-from api.src.interface_model import InterfaceModel, PeftModel, PeftConfig
+from src.api.src.interface_model import InterfaceModel, PeftModel, PeftConfig
 
 
 @pytest.fixture

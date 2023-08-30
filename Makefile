@@ -7,11 +7,11 @@ run:
 stop:
 	docker-compose down
 
-tests:
-	python3 -m pytest src/tests/bot_test.py
-	python3 -m pytest src/tests/dataset_test.py
-	python3 -m pytest src/tests/interface_test.py
-	python3 -m pytest src/tests/finetune_test.py
+test:
+	python3 -m pytest tests/bot_test.py
+	python3 -m pytest tests/dataset_test.py
+	python3 -m pytest tests/interface_test.py
+	python3 -m pytest tests/finetune_test.py
 	
 clean:
 	rm -rf output wandb models/rudialogpt-medium-lora-5ep-test

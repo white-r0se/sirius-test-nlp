@@ -11,7 +11,7 @@ from transformers import (
     DataCollatorForLanguageModeling,
 )
 from peft import LoraConfig, get_peft_model, TaskType
-from data.dataset import ConversationDataModule
+from src.data.dataset import ConversationDataModule
 import os
 
 cur_path = os.path.dirname(os.path.abspath(__file__))
@@ -91,6 +91,7 @@ class FineTune:
             bias="none",
             task_type=TaskType.CAUSAL_LM
         )
+        self.model = get_peft_model(self.model, self.lora_config)
         self.data_collator = DataCollatorForLanguageModeling(
             tokenizer=self.tokenizer, mlm=False
         )

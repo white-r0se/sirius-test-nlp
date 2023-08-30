@@ -3,7 +3,7 @@ import torch
 from transformers import AutoTokenizer
 from torch.utils.data import DataLoader
 import pandas as pd
-from data.dataset import ApplyWordDropout, ConversationDataset, ConversationDataModule
+from src.data.dataset import ApplyWordDropout, ConversationDataset, ConversationDataModule
 
 
 class MockConfig:
