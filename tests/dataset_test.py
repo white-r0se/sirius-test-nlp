@@ -3,10 +3,14 @@ import torch
 from transformers import AutoTokenizer
 from torch.utils.data import DataLoader
 import pandas as pd
-from src.data.dataset import ApplyWordDropout, ConversationDataset, ConversationDataModule
+from src.data.dataset import (
+    ApplyWordDropout,
+    ConversationDataset,
+    ConversationDataModule,
+)
 
 
-class MockConfig:
+class TestConfig:
     def __init__(self):
         self.word_dropout = 0.2
         self.val_size = 0.2
@@ -37,19 +41,19 @@ def word_dropout(tokenizer):
 
 @pytest.fixture
 def conversation_dataset():
-    cfg = MockConfig()
+    cfg = TestConfig()
     return ConversationDataset(cfg.df, cfg)
 
 
 @pytest.fixture
 def conversation_data_module():
-    cfg = MockConfig()
+    cfg = TestConfig()
     data_module = ConversationDataModule(cfg.df, cfg)
     data_module.setup()
     return data_module
 
 
-def test_apply_word_dropout(tokenizer, word_dropout):
+def test_apply_word_dropout(word_dropout):
     input_tensor = torch.tensor([101, 2023, 2003, 1996, 2307, 102])
     dropout_tensor = input_tensor.clone()
     while torch.all(torch.eq(dropout_tensor, input_tensor)):
@@ -61,21 +65,17 @@ def test_concat_conv(conversation_dataset, tokenizer):
     sentences = ["Hello", "How are you?"]
     conv_flat = conversation_dataset._concat_conv(sentences, tokenizer)
     assert isinstance(conv_flat, torch.Tensor)
-    assert torch.all(
-        torch.eq(
-            conv_flat,
-            torch.tensor([50257, 44, 42911, 50258, 44, 1170, 2213, 9497, 35, 50257]),
-        )
+    assert torch.allclose(
+        conv_flat,
+        torch.tensor([50257, 44, 42911, 50258, 44, 1170, 2213, 9497, 35, 50257]),
     )
 
 
 def test_train_dataloader(conversation_data_module):
     train_loader = conversation_data_module.train_dataloader()
-    assert train_loader is not None
     assert isinstance(train_loader, DataLoader)
 
 
 def test_val_dataloader(conversation_data_module):
     val_loader = conversation_data_module.val_dataloader()
-    assert val_loader is not None
     assert isinstance(val_loader, DataLoader)

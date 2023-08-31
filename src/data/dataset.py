@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import torch.nn.functional as F
 from transformers import AutoTokenizer
-import pytorch_lightning as pl
+from src.config.config_for_trainer import Config
 from sklearn.model_selection import train_test_split
 from pandas import DataFrame
 from torch import Tensor
@@ -31,7 +31,7 @@ class ApplyWordDropout:
 class ConversationDataset(Dataset):
     """Dataset for conversation data"""
 
-    def __init__(self, df: DataFrame, cfg):
+    def __init__(self, df: DataFrame, cfg: Config):
         super().__init__()
         self.tokenizer = AutoTokenizer.from_pretrained(
             "tinkoff-ai/ruDialoGPT-small", padding_side="left"
@@ -82,11 +82,10 @@ class ConversationDataset(Dataset):
         return self.samples[item].to(torch.long)
 
 
-class ConversationDataModule(pl.LightningDataModule):
+class ConversationDataModule:
     """DataModule for conversation data"""
 
-    def __init__(self, data, cfg):
-        super().__init__()
+    def __init__(self, data: DataFrame, cfg: Config):
         train_data, val_data = train_test_split(data, test_size=cfg.val_size)
         self.train_data = train_data
         self.val_data = val_data

@@ -2,7 +2,7 @@ import os
 import pytest
 from unittest.mock import patch, MagicMock
 import requests
-from src.bot.src.main import ChatBot
+from src.bot.run_bot import ChatBot
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -16,16 +16,14 @@ def chat_bot():
 def test_check_connection_success(mock_get, chat_bot):
     mock_get.return_value.status_code = 200
 
-    result = chat_bot.check_connection()
-    assert result is True
+    assert chat_bot.check_connection()
 
 
 @patch("requests.get")
 def test_check_connection_failure(mock_get, chat_bot):
     mock_get.side_effect = requests.exceptions.ConnectionError()
 
-    result = chat_bot.check_connection()
-    assert result is False
+    assert not chat_bot.check_connection()
 
 
 @patch("requests.post")

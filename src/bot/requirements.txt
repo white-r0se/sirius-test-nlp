@@ -1,2 +1,0 @@
-telebot
-requests==2.28.2

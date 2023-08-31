@@ -2,26 +2,24 @@ version: '3'
 services:
   app:
     build:
-      context: ./src/api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.api
     volumes:
       - ./models:/app/models
     ports:
       - "80:80"
     networks:
       - mynet
-    cpus: 4
   bot:
     build:
-      context: ./src/bot
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.bot
     depends_on:
       - app
     networks:
       - mynet
     secrets:
       - token
-    cpus: 4
 
 networks:
   mynet:
